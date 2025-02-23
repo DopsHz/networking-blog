@@ -1,0 +1,91 @@
+Part 4 - Configure VLAN & Trunking in Core-RTR3 & SW3
+- Create VLAN & set the vlan name as display
+- Configure portfast in all of interfaces that connected to PC
+- Configure Router on Stick & DHCP Server in Core-RTR3 for VLAN80, set the DNS Server to 192.168.90.2
+- Bellow is the address detail of each VLAN. Core-RTR3 will use first IP Address of each VLAN
+- Configure IP Address on SVR1 & SVR2 manually, 192.168.90.2 for SVR1 and 192.168.90.3 for SVR2
+- In the end of this section, make sure that each PC and Server can ping each others
+
+IP ADDRESS
+VLAN80	192.168.80.0/24
+VLAN90	192.168.90.0/24
+
+<==================================Part 4==================================>
+
+# Menyalakan interface yang terhubung antar Router3 dengan Switch3
+!!!!!!!!!! Lakukan di Router3 dan Switch3 !!!!!!!!!!
+
+enable
+configure terminal
+ip routing #khusus router3
+interface fastEthernet 0/1 #gunakan interface yang menghubugkan Router3 dengan Switch3
+no shutdown
+exit
+
+- Create VLAN & set the vlan name as display
+
+#Konfigurasi VLAN di Switch3
+!!!!!!!!!! Lakukan di Switch3 !!!!!!!!!!
+
+enable
+configure terminal
+vlan 80
+name GREYBROWN
+exit
+
+vlan 90
+name TURQOISEGREEN
+exit
+
+- Configure portfast in all of interfaces that connected to PC
+
+#Konfigurasi PortFast untuk PC dan SVR di Switch
+
+interface fastEthernet 0/2 #gunakan interface yang terhubung ke PC dan SVR
+switchport mode access
+switchport access vlan 80 #gunakan VLAN yang ingin digunakan untuk interface tersebut
+spanning-tree portfast
+exit
+
+#Konfigurasi Trunking antara Switch3 dan Router3
+!!!!!!!!!! Lakukan di Switch3 !!!!!!!!!!
+
+interface fastEthernet 0/1 #gunakan interface yang menghubungkan switch dengan router
+switchport mode trunk
+switchport trunk allowed vlan 80,90
+exit
+
+- Configure Router on Stick & DHCP Server in Core-RTR3 for VLAN80, set the DNS Server to 192.168.90.2
+
+#Konfigurasi Router-on-a-Stick di Router3
+!!!!!!!!!! Lakukan di Router3 !!!!!!!!!!
+
+enable
+configure terminal
+
+interface fastEthernet 0/1.80 #gunakan interface yang menghubungkan switch dengan router
+encapsulation dot1Q 80
+ip address 192.168.80.1 255.255.255.0
+exit
+
+interface fastEthernet 0/1.90 #gunakan interface yang menghubungkan switch dengan router
+encapsulation dot1Q 90
+ip address 192.168.90.1 255.255.255.0
+exit
+
+# Konfigurasi DHCP Server di Router3 untuk VLAN 80
+ip dhcp excluded-address 192.168.80.1 192.168.80.10
+
+ip dhcp pool VLAN80
+ network 192.168.80.0 255.255.255.0
+ default-router 192.168.80.1
+ dns-server 192.168.90.2
+exit
+
+- Configure IP Address on SVR1 & SVR2 manually, 192.168.90.2 for SVR1 and 192.168.90.3 for SVR2
+
+Untuk ini masukan IP secara manual dengan
+
+Klik icon SVR1 dan SVR2 > Dekstop > IP Configuration, lalu masukan IP Address, subnetmask, gateway (gunakan IP VLAN90), dan Dns)
+
+

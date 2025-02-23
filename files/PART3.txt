@@ -1,0 +1,118 @@
+Part 3 - Configure VLAN & Trunking in Core-SW1, SW1, & SW2
+- Create VLAN & set the vlan name as display
+- Configure portfast in all of interfaces that connected to PC
+- Configure SVI & DHCP Server in Core-SW1 for all VLAN, set the DNS Server to 192.168.90.2
+- Bellow is the address detail of each VLAN. Core-SW1 will use first IP Address of each VLAN
+- In the end of this section, make sure that each PC can ping each others
+
+IP ADDRESS
+VLAN40	192.168.40.0/24
+VLAN50	192.168.50.0/24
+VLAN60	192.168.60.0/24
+VLAN70	192.168.70.0/24
+
+<==================================Part 3==================================>
+- Create VLAN & set the vlan name as display
+
+!!!!!!!!!! Lakukan di Core-Switch1 !!!!!!!!!!
+
+enable
+configure terminal
+ip routing #khusus core switch
+vlan 40
+name DARKGREEN
+exit
+
+vlan 50
+name GREEN
+exit
+
+vlan 60
+name BLUE
+exit
+
+vlan 70
+name LIGHTBLUE
+exit
+
+# Konfigurasi Trunking di Core-SW1, SW1, dan SW2
+!!!!!!!!!! Lakukan di Core-Switch1, Switch1, & Switch2!!!!!!!!!!
+
+interface fastEthernet 0/1 #gunakan interface yang menghubungkan core switch dengan switch
+switchport mode trunk
+switchport trunk allowed vlan 40,50,60,70
+exit
+
+- Configure portfast in all of interfaces that connected to PC
+
+# Konfigurasi Port Access & PortFast untuk PC di SW1 & SW2
+!!!!!!!!!! Lakukan di Switch1 & Switch2!!!!!!!!!!
+
+interface fastEthernet 0/2 #gunakan interface yang terhubung ke PC
+switchport mode access
+switchport access vlan 40 #gunakan VLAN yang ingin digunakan untuk interface tersebut
+spanning-tree portfast
+exit
+
+- Configure SVI & DHCP Server in Core-SW1 for all VLAN, set the DNS Server to 192.168.90.2
+# Konfigurasi SVI & IP Routing di Core-SW1
+!!!!!!!!!! Lakukan di Core-Switch1!!!!!!!!!!
+
+enable
+configure terminal
+ip routing
+
+# Konfigurasi SVI
+
+interface vlan 40
+ip address 192.168.40.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 50
+ip address 192.168.50.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 60
+ip address 192.168.60.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 70
+ip address 192.168.70.1 255.255.255.0
+no shutdown
+exit
+
+# Konfigurasi DHCP Server di Core-SW1
+
+ip dhcp excluded-address 192.168.40.1 192.168.40.10
+ip dhcp excluded-address 192.168.50.1 192.168.50.10
+ip dhcp excluded-address 192.168.60.1 192.168.60.10
+ip dhcp excluded-address 192.168.70.1 192.168.70.10
+
+ip dhcp pool VLAN40
+ network 192.168.40.0 255.255.255.0
+ default-router 192.168.40.1
+ dns-server 192.168.90.2
+exit
+
+ip dhcp pool VLAN50
+ network 192.168.50.0 255.255.255.0
+ default-router 192.168.50.1
+ dns-server 192.168.90.2
+exit
+
+ip dhcp pool VLAN60
+ network 192.168.60.0 255.255.255.0
+ default-router 192.168.60.1
+ dns-server 192.168.90.2
+exit
+
+ip dhcp pool VLAN70
+ network 192.168.70.0 255.255.255.0
+ default-router 192.168.70.1
+ dns-server 192.168.90.2
+exit
+
+- Verifikasi dengan Ping tiap PC 

@@ -1,0 +1,108 @@
+Part 2 - Configure VLAN & Trunking in Core-SW2 & SW4
+- Create VLAN & set the vlan name as display
+- Configure portfast in all of interfaces that connected to PC
+- Configure SVI & DHCP Server in Core-SW2 for all VLAN, set the DNS Server to 192.168.90.2
+- Bellow is the address detail of each VLAN. Core-SW2 will use first IP Address of each VLAN
+- In the end of this section, make sure that each PC can ping each others
+
+IP ADRESSES
+VLAN10	192.168.10.0/24
+VLAN20	192.168.20.0/24
+VLAN30	192.168.30.0/24
+
+<==================================Part 2==================================>
+- Create VLAN & set the vlan name as display
+
+!!!!!!!!!! Lakukan di Core-Switch2 !!!!!!!!!!
+
+enable
+configure terminal
+ip routing
+
+!!!!!!!!!! Lakukan di Core-Switch2 dan Switch4!!!!!!!!!!
+# Membuat VLAN dan menamai sesuai keinginan
+
+vlan 10
+name PINK
+exit
+
+vlan 20
+name YELLOW
+exit
+
+vlan 30
+name ORANGE
+exit
+
+# Konfigurasi trunk di interface yang menghubungkan Core-Switch2 dengan Switch4
+
+interface fastEthernet 0/6
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+exit
+
+- Configure portfast in all of interfaces that connected to PC
+
+!!!!!!!!!! Lakukan di Core-Switch2 dan Switch4 !!!!!!!!!!
+
+enable
+configure terminal
+
+# Lakukan di semua interface yang terhubung dengan PC pada Core-Switch2 dan Switch4
+
+interface fastEthernet 0/2 #gunakan interface yang terhubung dengan PC misal 0/2
+switchport mode access
+switchport access vlan 10 # Tentukan VLAN sesuai di soal misal interface 0/4 masuk nya pada VLAN30 gunakan VLAN30
+spanning-tree portfast
+exit
+
+- Configure SVI & DHCP Server in Core-SW2 for all VLAN, set the DNS Server to 192.168.90.2
+
+!!!!!!!!!! Lakukan di Core-Switch2 !!!!!!!!!!
+
+# Konfigurasi SVI (IP Address untuk tiap VLAN)
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+
+interface vlan 20
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+
+interface vlan 30
+ip address 192.168.30.1 255.255.255.0
+no shutdown
+
+# Konfigurasi DHCP Server untuk Masing-Masing VLAN
+
+ip dhcp excluded-address 192.168.10.1
+ip dhcp excluded-address 192.168.20.1
+ip dhcp excluded-address 192.168.30.1
+
+ip dhcp pool VLAN10
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 192.168.90.2
+
+ip dhcp pool VLAN20
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.1
+dns-server 192.168.90.2
+
+ip dhcp pool VLAN30
+network 192.168.30.0 255.255.255.0
+default-router 192.168.30.1
+dns-server 192.168.90.2
+
+- Verifikasi dengan Ping tiap PC
+- Jika tidak bisa verifikasi dengan Command yang beruhubungan dengan masalah yang terjadi, contoh:
+
+show vlan brief # Cek VLAN
+show interfaces trunk # Cek Trunk ke Core-SW2
+
+
+
+
+
+

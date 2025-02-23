@@ -1,0 +1,66 @@
+Part 6 - Configure OSPF in All of Routers
+- Configure OSPF in all of routers as display
+- In the end of this section, Make sure:
+- OSPF neighborship is UP in all of routers
+- Table routing is complete in all of routers
+- All of clients can ping each others
+
+<==================================Part 6==================================>
+- Configure OSPF in all of routers as display
+
+# Konfigurasi OSPF di Setiap Router
+!!!!!!!!!! Lakukan di Router1 !!!!!!!!!!
+
+enable
+configure terminal
+router ospf 1
+ network 10.10.10.0 0.0.0.3 area 0  # Koneksi ke Router 2
+ network 10.10.10.4 0.0.0.3 area 0  # Koneksi ke Router 3
+exit
+
+!!!!!!!!!! Lakukan di Router2 !!!!!!!!!!
+
+enable
+configure terminal
+router ospf 1
+ network 10.10.10.0 0.0.0.3 area 0  # Koneksi ke Router 1
+ network 10.10.10.12 0.0.0.3 area 0  # Koneksi ke Core-Switch1
+ network 10.10.10.8 0.0.0.3 area 0  # Koneksi ke Core-Switch2
+exit
+
+!!!!!!!!!! Lakukan di Router3 !!!!!!!!!!
+
+enable
+configure terminal
+router ospf 1
+ network 10.10.10.4 0.0.0.3 area 0  # Koneksi ke Router 1
+ network 192.168.80.0 0.0.0.255 area 0 # Koneksi ke switch 3
+ network 192.168.90.0 0.0.0.255 area 0 # Koneksi ke switch 3
+exit
+
+!!!!!!!!!! Lakukan di Core-Switch1 !!!!!!!!!!
+
+enable
+configure terminal
+ip routing
+router ospf 1
+ network 10.10.10.12 0.0.0.3 area 0  # Untuk koneksi ke Router 2
+ network 192.168.40.0 0.0.0.255 area 0  # VLAN40
+ network 192.168.50.0 0.0.0.255 area 0  # VLAN50
+ network 192.168.60.0 0.0.0.255 area 0  # VLAN60
+ network 192.168.70.0 0.0.0.255 area 0  # VLAN70
+exit
+
+!!!!!!!!!! Lakukan di Core-Switch2 !!!!!!!!!!
+
+enable
+configure terminal
+ip routing
+router ospf 1
+ network 10.10.10.8 0.0.0.3 area 0 # Untuk koneksi ke Router 2
+ network 192.168.10.0 0.0.0.255 area 0 # VLAN10
+ network 192.168.20.0 0.0.0.255 area 0 # VLAN20
+ network 192.168.30.0 0.0.0.255 area 0 # VLAN30
+exit
+
+#Pastikan semua PC bisa saling ping

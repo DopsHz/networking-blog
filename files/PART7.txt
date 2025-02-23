@@ -1,0 +1,57 @@
+Part 7 - Configure DNS & Web Server
+- Configure DNS Server in SVR1:
+   - Create A Record for agunacourse.com to 192.168.90.3
+   - Create CNAME Record for www.agunacourse.com to agunacourse.com
+- Configure Web Server in SVR2 to display "Welcome to AgunaCourse.com"
+- In the end of this section, make sure that all of clients can ping & akses agunacourse.com via web browser
+
+<==================================Part 7==================================>
+- Configure DNS Server in SVR1:
+   - Create A Record for agunacourse.com to 192.168.90.3
+   - Create CNAME Record for www.agunacourse.com to agunacourse.com
+
+!!!!!!!!!! Lakukan di SVR1 !!!!!!!!!!
+
+1. Klik Server (SVR1)
+2. Pilih Tab Services
+3. Pilih DNS
+5. Aktifkan DNS Service (On)
+6. Tambahkan A Record:
+   - Domain Name: agunacourse.com
+   - Address: 192.168.90.3
+   - Klik Add
+7. Tambahkan CNAME Record:
+   - Domain Name: www.agunacourse.com
+   - Alias: agunacourse.com
+   - Klik Add
+8. Simpan Konfigurasi
+
+- Configure Web Server in SVR2 to display "Welcome to AgunaCourse.com"
+
+!!!!!!!!!! Lakukan di SVR2 !!!!!!!!!!
+1. Klik Server (SVR2)
+2. Pilih Tab Services
+3. Pilih HTTP
+4. Pastikan HTTP Service dalam keadaan On
+5. Klik Tab index.html dan klik (edit)
+6. Ubah Konten Halaman Web dengan:
+
+<html>
+<head><title>AgunaCourse</title></head>
+<body><h1>Welcome to AgunaCourse.com</h1></body>
+</html>
+
+7. Simpan Perubahan
+
+- In the end of this section, make sure that all of clients can ping & akses agunacourse.com via web browser
+
+!!!!!!!!!! Lakukan di semua PC !!!!!!!!!!
+
+1. Klik PC Client
+2. Pilih Tab Desktop
+3. Pilih Web Browser
+4. Ketik URL di Address Bar: (http://agunacourse.com)
+5. Tekan Enter
+6. Jika benar maka akan muncul tulisan: (Welcome to AgunaCourse.com)
+
+

@@ -1,0 +1,28 @@
+Part 8 - Configure Access List
+- Configure Access List in Core-RTR3 to prevent access from VLAN10 & VLAN60 to Server
+- Use access-list id 101
+- In the end of this section, make sure that VLAN10 & VLAN60 can't access to server
+
+<==================================Part 8==================================>
+- Configure Access List in Core-RTR3 to prevent access from VLAN10 & VLAN60 to Server
+- Use access-list id 101
+
+!!!!!!!!!! Lakukan di Router3 !!!!!!!!!!
+#Konfigurasi Extended Access List (ACL 101) di Router3
+
+enable
+configure terminal
+access-list 101 deny ip 192.168.10.0 0.0.0.255 host 192.168.90.3 #Block VLAN 10
+access-list 101 deny ip 192.168.60.0 0.0.0.255 host 192.168.90.3 #Block VLAN 60
+access-list 101 permit ip any any #Traffic lain boleh masuk
+
+#Terapkan ACL di Interface yang Mengarah ke Server
+interface FastEthernet0/1
+ ip access-group 101 out
+
+#Terapkan ACL di Interface ke Switch
+interface FastEthernet0/0
+ ip access-group 101 in
+
+- In the end of this section, make sure that VLAN10 & VLAN60 can't access to server
+Pastikan PC pada VLAN10 dan 60 tidak bisa membuka web dan tidak bisa ping

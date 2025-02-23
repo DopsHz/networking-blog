@@ -1,0 +1,73 @@
+Part 5 - Configure Point to Point Addressing Between Routers
+- Configure IP Address in all of routers as display
+- In the end of this section, make sure that each routers can ping each others
+
+<==================================Part 5==================================>
+- Configure IP Address in all of routers as display
+
+# Konfigurasi IP Address di Setiap Router
+!!!!!!!!!! Lakukan di Router1 !!!!!!!!!!
+
+enable
+configure terminal
+
+# Interface ke Router3
+interface fastEthernet0/1
+ ip address 10.10.10.5 255.255.255.252
+ no shutdown
+exit
+
+# Interface ke Router2
+interface fastEthernet0/0
+ ip address 10.10.10.1 255.255.255.252
+ no shutdown
+exit
+
+!!!!!!!!!! Lakukan di Router3 !!!!!!!!!!
+
+# Interface ke Router1
+interface fastEthernet0/0
+ ip address 10.10.10.6 255.255.255.252
+ no shutdown
+exit
+
+!!!!!!!!!! Lakukan di Router2 !!!!!!!!!!
+
+# Interface ke Router1
+interface fastEthernet1/0
+ ip address 10.10.10.2 255.255.255.252
+ no shutdown
+exit
+
+# Interface ke Core-Switch2
+interface fastEthernet0/1
+ ip address 10.10.10.9 255.255.255.252
+ no shutdown
+exit
+
+# Interface ke Core-Switch3
+interface fastEthernet0/0
+ ip address 10.10.10.13 255.255.255.252
+ no shutdown
+exit
+
+!!!!!!!!!! Lakukan di Core-Switch2 !!!!!!!!!!
+
+# Interface ke Router2
+interface fastEthernet0/1
+ no switchport
+ ip address 10.10.10.10 255.255.255.252
+ no shutdown
+exit
+
+!!!!!!!!!! Lakukan di Core-Switch3 !!!!!!!!!!
+
+# Interface ke Router2
+interface fastEthernet0/1
+ no switchport
+ ip address 10.10.10.14 255.255.255.252
+ no shutdown
+exit
+
+- In the end of this section, make sure that each routers can ping each others
+Pastikan semua router bisa saling ping dan CSW 2 dan 3 dapat terping ke router 2
